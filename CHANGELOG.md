@@ -1,5 +1,17 @@
 # Atlas Changelog
 
+## Unreleased
+
+### Enhancements
+
+* Replaced deprecated `UISearchDisplayController` with `UISearchController` in `ATLConversationListViewController`. This reduces complexity by removing the need to switch between different query controllers.
+* Refactored `ATLConversationViewController` to harden against mismanagement and prevent common crashes and issues.
+
+### Bug Fixes
+
+* Fixed a pagination issue in `ATLConversationViewController` where, after navigating to a conversation, additional messages would not sync and the activity indicator would continue to spin until the user pulled down.
+* `ATLConversationListViewController` no longer filters out conversations the authenticated user was removed from. This allows the user to access the conversation and mark messages as read in order to have an accurate unread badge count.
+
 ## 1.0.30
 
 ### Enhancements

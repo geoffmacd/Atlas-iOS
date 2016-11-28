@@ -24,9 +24,9 @@
 #import "ATLMessagingUtilities.h"
 #import "ATLParticipant.h"
 
-CGFloat const ATLMessageCellHorizontalMargin = 16.0f;
-CGFloat const ATLAvatarImageLeadPadding = 8.0f;
-CGFloat const ATLAvatarImageTailPadding = 8.0f;
+CGFloat const ATLMessageCellHorizontalMargin = 12.0f;
+CGFloat const ATLAvatarImageLeadPadding = 6.0f;
+CGFloat const ATLAvatarImageTailPadding = 6.0f;
 
 @interface ATLBaseCollectionViewCell ()
 

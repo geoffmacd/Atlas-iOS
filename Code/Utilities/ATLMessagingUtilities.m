@@ -69,7 +69,7 @@ UIMutableUserNotificationCategory *ATLDefaultUserNotificationCategory()
 
 CGFloat ATLMaxCellWidth()
 {
-    return 215;
+    return 270;
 }
 
 CGFloat ATLMaxCellHeight()

@@ -1205,6 +1205,7 @@ static NSInteger const ATLPhotoActionSheet = 1000;
           forChangeType:(LYRQueryControllerChangeType)type
            newIndexPath:(NSIndexPath *)newIndexPath
 {
+    if (self.collectionView.window == nil) return;
     if (self.expandingPaginationWindow) return;
     NSInteger currentIndex = indexPath ? [self.conversationDataSource collectionViewSectionForQueryControllerRow:indexPath.row] : NSNotFound;
     NSInteger newIndex = newIndexPath ? [self.conversationDataSource collectionViewSectionForQueryControllerRow:newIndexPath.row] : NSNotFound;
@@ -1225,6 +1226,12 @@ static NSInteger const ATLPhotoActionSheet = 1000;
         self.expandingPaginationWindow = NO;
         self.showingMoreMessagesIndicator = [self.conversationDataSource moreMessagesAvailable];
         [self reloadCollectionViewAdjustingForContentHeightChange];
+        return;
+    }
+    
+    if (self.collectionView.window == nil) {
+        [self.collectionView reloadData];
+        [self.collectionView layoutIfNeeded];
         return;
     }
     

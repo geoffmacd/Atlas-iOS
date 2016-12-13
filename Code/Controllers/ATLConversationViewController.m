@@ -1210,7 +1210,6 @@ static NSInteger const ATLPhotoActionSheet = 1000;
            newIndexPath:(NSIndexPath *)newIndexPath
 {
     if (self.collectionView.window == nil) return;
-    if (self.expandingPaginationWindow) return;
     NSInteger currentIndex = indexPath ? [self.conversationDataSource collectionViewSectionForQueryControllerRow:indexPath.row] : NSNotFound;
     NSInteger newIndex = newIndexPath ? [self.conversationDataSource collectionViewSectionForQueryControllerRow:newIndexPath.row] : NSNotFound;
     [self.objectChanges addObject:[ATLDataSourceChange changeObjectWithType:type newIndex:newIndex currentIndex:currentIndex]];

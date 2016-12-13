@@ -1225,16 +1225,16 @@ static NSInteger const ATLPhotoActionSheet = 1000;
     NSArray *objectChanges = [self.objectChanges copy];
     [self.objectChanges removeAllObjects];
     
+    if (self.collectionView.window == nil) {
+        [self.collectionView reloadData];
+        [self.collectionView layoutIfNeeded];
+        return;
+    }
+    
     if (self.expandingPaginationWindow) {
         self.expandingPaginationWindow = NO;
         self.showingMoreMessagesIndicator = [self.conversationDataSource moreMessagesAvailable];
         [self reloadCollectionViewAdjustingForContentHeightChange];
-        return;
-    }
-    
-    if (self.collectionView.window == nil) {
-        [self.collectionView reloadData];
-        [self.collectionView layoutIfNeeded];
         return;
     }
     

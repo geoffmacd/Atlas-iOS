@@ -111,7 +111,6 @@ static CGFloat const ATLMaxScrollDistanceFromBottom = 150;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.messageInputToolbar.hidden = NO;
 
     // Workaround for a modal dismissal causing the message toolbar to remain offscreen on iOS 8.
     if (self.presentedViewController) {
@@ -153,11 +152,6 @@ static CGFloat const ATLMaxScrollDistanceFromBottom = 150;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
-    self.messageInputToolbar.hidden = YES;
-    if ([self.messageInputToolbar.textInputView isFirstResponder]) {
-        [self.messageInputToolbar.textInputView resignFirstResponder];
-    }
     
     self.messageInputToolbar.translucent = NO;
     if (atl_systemVersionLessThan(@"10.0")) {

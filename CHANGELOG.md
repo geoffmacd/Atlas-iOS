@@ -1,16 +1,20 @@
 # Atlas Changelog
 
-## Unreleased
+## 1.0.31
 
 ### Enhancements
 
 * Replaced deprecated `UISearchDisplayController` with `UISearchController` in `ATLConversationListViewController`. This reduces complexity by removing the need to switch between different query controllers.
+* Replaced deprecated `UISearchDisplayController` with `UISearchController` in `ATLParticipantTableViewController`.
+* Updated some deprecated `NSCalendar` objects in `ATLConversationTableViewCell`.
 * Refactored `ATLConversationViewController` to harden against mismanagement and prevent common crashes and issues.
 
 ### Bug Fixes
 
+* Fixed an issue in `ATLConversationViewController` where the "more messages indicator" would continue to display and spin even if all messages had been synced. This was due to a mismatch between the total number of messages in a conversation and the total number of non-deleted messages for that user. [APPS-2629]
 * Fixed a pagination issue in `ATLConversationViewController` where, after navigating to a conversation, additional messages would not sync and the activity indicator would continue to spin until the user pulled down.
 * `ATLConversationListViewController` no longer filters out conversations the authenticated user was removed from. This allows the user to access the conversation and mark messages as read in order to have an accurate unread badge count.
+* Fixed a crash in `ATLAddressBarViewController` that could occur if a participant was selected while the `displayName` was `nil`. It will now appear as `Unknown Participant` instead.
 
 ## 1.0.30
 

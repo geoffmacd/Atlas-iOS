@@ -227,14 +227,11 @@ static NSInteger const ATLPhotoActionSheet = 1000;
     [self updateTypingIndicatorOverlay:NO];
     
     // Set up the controller for the conversation
+    [self deinitializeConversationDataSource];
+    [self setupConversationDataSource];
     [self configureControllerForConversation];
     [self configureAddressBarForChangedParticipants];
     
-    if (conversation) {
-        [self setupConversationDataSource];
-    } else {
-        [self deinitializeConversationDataSource];
-    }
     CGSize contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize;
     [self.collectionView setContentOffset:[self bottomOffsetForContentSize:contentSize] animated:NO];
 }
@@ -1209,7 +1206,6 @@ static NSInteger const ATLPhotoActionSheet = 1000;
           forChangeType:(LYRQueryControllerChangeType)type
            newIndexPath:(NSIndexPath *)newIndexPath
 {
-    if (self.collectionView.window == nil) return;
     NSInteger currentIndex = indexPath ? [self.conversationDataSource collectionViewSectionForQueryControllerRow:indexPath.row] : NSNotFound;
     NSInteger newIndex = newIndexPath ? [self.conversationDataSource collectionViewSectionForQueryControllerRow:newIndexPath.row] : NSNotFound;
     [self.objectChanges addObject:[ATLDataSourceChange changeObjectWithType:type newIndex:newIndex currentIndex:currentIndex]];

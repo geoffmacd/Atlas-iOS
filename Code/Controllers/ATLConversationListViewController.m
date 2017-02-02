@@ -484,7 +484,7 @@ NSString *const ATLConversationListViewControllerDeletionModeEveryone = @"Everyo
 {
     LYRConversation *selectedConversation;
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-    if (indexPath && self.queryController.count > indexPath.row) {
+    if (indexPath) {
         selectedConversation = [self.queryController objectAtIndexPath:indexPath];
     }
     self.conversationSelectedBeforeContentChange = selectedConversation;

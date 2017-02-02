@@ -28,14 +28,19 @@
 static NSString *const ATLParticipantTableSectionHeaderIdentifier = @"ATLParticipantTableSectionHeaderIdentifier";
 static NSString *const ATLParticipantCellIdentifier = @"ATLParticipantCellIdentifier";
 
-@interface ATLParticipantTableViewController () <UISearchBarDelegate, UISearchResultsUpdating>
+@interface ATLParticipantTableViewController () <UISearchBarDelegate, UISearchDisplayDelegate>
 
-@property (nonatomic) ATLParticipantTableDataSet *participantsDataSet;
+@property (nonatomic) ATLParticipantTableDataSet *unfilteredDataSet;
+@property (nonatomic) ATLParticipantTableDataSet *filteredDataSet;
 @property (nonatomic) NSMutableSet *selectedParticipants;
 @property (nonatomic) UISearchBar *searchBar;
 @property (nonatomic) BOOL hasAppeared;
 @property (nonatomic) BOOL isObservingParticipants;
-@property (nonatomic) UISearchController *searchController;
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+@property (nonatomic) UISearchDisplayController *searchController;
+#pragma GCC diagnostic pop
 
 @end
 
@@ -100,21 +105,21 @@ NSString *const ATLParticipantTableViewControllerTitle = @"Participants";
     self.tableView.sectionHeaderHeight = 20;
     [self.tableView registerClass:[ATLParticipantSectionHeaderView class] forHeaderFooterViewReuseIdentifier:ATLParticipantTableSectionHeaderIdentifier];
     
-    // UISearchController
-    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
-    self.searchController.searchResultsUpdater = self;
-    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+    [self.searchBar sizeToFit];
+    self.searchBar.translucent = NO;
+    self.searchBar.accessibilityLabel = @"Search Bar";
+    self.searchBar.delegate = self;
+    self.searchBar.userInteractionEnabled = YES;
+    self.tableView.tableHeaderView = self.searchBar;
     
-    // UISearchBar
-    self.searchController.searchBar.delegate = self;
-    self.searchController.searchBar.translucent = NO;
-    self.searchController.searchBar.accessibilityLabel = @"Search Bar";
-    [self.searchController.searchBar sizeToFit];
-    self.tableView.tableHeaderView = self.searchController.searchBar;
-    
-    // Since the search view covers the table view when active we make the
-    // table view controller define the presentation context
-    self.definesPresentationContext = YES;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    self.searchController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
+#pragma GCC diagnostic pop
+    self.searchController.delegate = self;
+    self.searchController.searchResultsDelegate = self;
+    self.searchController.searchResultsDataSource = self;
 
     self.title = ATLLocalizedString(@"alt.participant.tableview.title.key", ATLParticipantTableViewControllerTitle, nil);
 }
@@ -126,7 +131,7 @@ NSString *const ATLParticipantTableViewControllerTitle = @"Participants";
         self.tableView.rowHeight = self.rowHeight;
         self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
         [self.tableView registerClass:self.cellClass forCellReuseIdentifier:ATLParticipantCellIdentifier];
-        self.participantsDataSet = [ATLParticipantTableDataSet dataSetWithParticipants:self.participants sortType:self.sortType];
+        self.unfilteredDataSet = [ATLParticipantTableDataSet dataSetWithParticipants:self.participants sortType:self.sortType];
         [self startObservingParticipants];
         [self.tableView reloadData];
     }
@@ -180,22 +185,37 @@ NSString *const ATLParticipantTableViewControllerTitle = @"Participants";
     _sortType = sortType;
 }
 
-#pragma mark - UISearchResultsUpdating
+#pragma mark - UISearchDisplayDelegate
 
-- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+- (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView
 {
-    NSString *searchString = searchController.searchBar.text;
-    [self.delegate participantTableViewController:self didSearchWithString:searchString completion:^(NSSet * _Nonnull filteredParticipants) {
-        if (![searchString isEqualToString:self.searchController.searchBar.text]) return;
-        self.participantsDataSet = [ATLParticipantTableDataSet dataSetWithParticipants:filteredParticipants sortType:self.sortType];
-        [self.tableView reloadData];
+    tableView.allowsMultipleSelection = self.allowsMultipleSelection;
+    tableView.sectionHeaderHeight = self.tableView.sectionHeaderHeight;
+    tableView.rowHeight = self.rowHeight;
+    [tableView registerClass:self.cellClass forCellReuseIdentifier:ATLParticipantCellIdentifier];
+    [tableView registerClass:[ATLParticipantSectionHeaderView class] forHeaderFooterViewReuseIdentifier:ATLParticipantTableSectionHeaderIdentifier];
+}
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    [self.delegate participantTableViewController:self didSearchWithString:searchString completion:^(NSSet *filteredParticipants) {
+        if (![searchString isEqualToString:controller.searchBar.text]) return;
+        self.filteredDataSet = [ATLParticipantTableDataSet dataSetWithParticipants:filteredParticipants sortType:self.sortType];
+        UITableView *tableView = controller.searchResultsTableView;
+        [tableView reloadData];
         for (id<ATLParticipant> participant in self.selectedParticipants) {
-            NSIndexPath *indexPath = [self indexPathForParticipant:participant inTableView:self.tableView];
+            NSIndexPath *indexPath = [self indexPathForParticipant:participant inTableView:tableView];
             if (!indexPath) continue;
-            [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+            [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
         }
     }];
+    return NO;
 }
+
+#pragma GCC diagnostic pop
 
 #pragma mark - UITableViewDataSource
 
@@ -258,8 +278,8 @@ NSString *const ATLParticipantTableViewControllerTitle = @"Participants";
     id<ATLParticipant> participant = [self participantForTableView:tableView atIndexPath:indexPath];
     [self.selectedParticipants addObject:participant];
     if (tableView != self.tableView) {
-        NSIndexPath *indexPath = [self indexPathForParticipant:participant inTableView:self.tableView];
-        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+        NSIndexPath *unfilteredIndexPath = [self indexPathForParticipant:participant inTableView:self.tableView];
+        [self.tableView selectRowAtIndexPath:unfilteredIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
     [self.delegate participantTableViewController:self didSelectParticipant:participant];
 }
@@ -269,8 +289,8 @@ NSString *const ATLParticipantTableViewControllerTitle = @"Participants";
     id<ATLParticipant> participant = [self participantForTableView:tableView atIndexPath:indexPath];
     [self.selectedParticipants removeObject:participant];
     if (tableView != self.tableView) {
-        NSIndexPath *indexPath = [self indexPathForParticipant:participant inTableView:self.tableView];
-        [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+        NSIndexPath *unfilteredIndexPath = [self indexPathForParticipant:participant inTableView:self.tableView];
+        [self.tableView deselectRowAtIndexPath:unfilteredIndexPath animated:NO];
     }
     if ([self.delegate respondsToSelector:@selector(participantTableViewController:didDeselectParticipant:)]) {
         [self.delegate participantTableViewController:self didDeselectParticipant:participant];
@@ -281,7 +301,11 @@ NSString *const ATLParticipantTableViewControllerTitle = @"Participants";
 
 - (ATLParticipantTableDataSet *)dataSetForTableView:(UITableView *)tableView
 {
-    return self.participantsDataSet;
+    if (tableView == self.tableView) {
+        return self.unfilteredDataSet;
+    } else {
+        return self.filteredDataSet;
+    }
 }
 
 - (id<ATLParticipant>)participantForTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath
@@ -333,17 +357,17 @@ NSString *const ATLParticipantTableViewControllerTitle = @"Participants";
 
         switch (change.type) {
             case LYRObjectChangeTypeCreate:
-                [self.participantsDataSet addParticipant:particpant];
+                [self.unfilteredDataSet addParticipant:particpant];
                 changeCount++;
                 break;
 
             case LYRObjectChangeTypeUpdate:
-                [self.participantsDataSet particpant:particpant updatedProperty:change.property];
+                [self.unfilteredDataSet particpant:particpant updatedProperty:change.property];
                 changeCount++;
                 break;
 
             case LYRObjectChangeTypeDelete:
-                [self.participantsDataSet removeParticipant:particpant];
+                [self.unfilteredDataSet removeParticipant:particpant];
                 changeCount++;
                 break;
 
@@ -355,6 +379,11 @@ NSString *const ATLParticipantTableViewControllerTitle = @"Participants";
 
     if (changeCount > 0) {
         [self.tableView reloadData];
+
+        // Perform the search again to update self.filteredDataSet
+        if (self.searchController.isActive) {
+            [self searchDisplayController:self.searchController shouldReloadTableForSearchString:self.searchController.searchBar.text];
+        }
     }
 }
 

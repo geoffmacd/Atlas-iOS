@@ -1,49 +1,45 @@
 PODS:
-  - Atlas (1.0.30):
-    - LayerKit (>= 0.23.0)
+  - Atlas (1.0.32):
+    - LayerKit (>= 0.25.0)
   - Expecta (1.0.5)
   - KIF (3.5.1):
     - KIF/Core (= 3.5.1)
   - KIF/Core (3.5.1)
-  - KIFViewControllerActions (1.0.1):
+  - KIFViewControllerActions (1.0.2):
     - KIF (>= 2.0.0)
-  - LayerKit (0.23.2)
+  - LayerKit (0.25.0)
   - LYRCountDownLatch (0.9.0)
-  - OCMock (3.3.1)
+  - OCMock (3.4)
 
 DEPENDENCIES:
   - Atlas (from `.`)
   - Expecta
   - KIF
-  - KIFViewControllerActions (from `https://github.com/blakewatters/KIFViewControllerActions.git`)
+  - KIFViewControllerActions (~> 1.0.2)
+  - LayerKit
   - LYRCountDownLatch (from `https://github.com/layerhq/LYRCountDownLatch.git`)
   - OCMock
 
 EXTERNAL SOURCES:
   Atlas:
     :path: "."
-  KIFViewControllerActions:
-    :git: https://github.com/blakewatters/KIFViewControllerActions.git
   LYRCountDownLatch:
     :git: https://github.com/layerhq/LYRCountDownLatch.git
 
 CHECKOUT OPTIONS:
-  KIFViewControllerActions:
-    :commit: 181b4f56bc36274288f6b6d3ab3969d749345290
-    :git: https://github.com/blakewatters/KIFViewControllerActions.git
   LYRCountDownLatch:
     :commit: 02119f855ad14e7fc0dae32bbbf17c735a281cfe
     :git: https://github.com/layerhq/LYRCountDownLatch.git
 
 SPEC CHECKSUMS:
-  Atlas: ed34285558cefba2be7b67c4f6d975724d69a59c
+  Atlas: a4052ee9f8eb0f044b0d03ba21c0300742a8332b
   Expecta: e1c022fcd33910b6be89c291d2775b3fe27a89fe
   KIF: 082eb65279e51c3092923802849eb796a04982ab
-  KIFViewControllerActions: 8d2f9ec9f185fa70ca9f54a297de544afe71ea55
-  LayerKit: 247c0099a6c09ef8ac9fd93ded3559d81dcfdc31
+  KIFViewControllerActions: 923795dc4bd4ca5657841ce7455ce67447693861
+  LayerKit: 2c92ab1325af22f9f62d00cd1e878903f87eb9b6
   LYRCountDownLatch: 9b440b42a19ddbf4e75bdd4b43726baa1527606a
-  OCMock: f3f61e6eaa16038c30caa5798c5e49d3307b6f22
+  OCMock: 35ae71d6a8fcc1b59434d561d1520b9dd4f15765
 
-PODFILE CHECKSUM: 31c94cbd9f9d85fc7e9aae02109733cba464cd83
+PODFILE CHECKSUM: 397ddf108df18c8108f28424e3c015a369c77b13
 
-COCOAPODS: 1.1.0.rc.2
+COCOAPODS: 1.2.0

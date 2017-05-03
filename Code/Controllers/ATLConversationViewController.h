@@ -19,7 +19,7 @@
 //
 
 #import <UIKit/UIKit.h>
-@import LayerKit;
+#import <LayerKit/LayerKit.h>
 #import <MapKit/MapKit.h>
 #import "ATLParticipant.h"
 #import "ATLBaseConversationViewController.h"
@@ -110,7 +110,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  @abstract Asks the data source for an object conforming to the `ATLParticipant` protocol for a given identifier.
  @param conversationViewController The `ATLConversationViewController` requesting the object.
- @param participantForIdentifier The participant identifier.
+ @param participantForIdentity The participant identity.
  @return An object conforming to the `ATLParticipant` protocol.
  */
 - (id<ATLParticipant>)conversationViewController:(ATLConversationViewController *)conversationViewController participantForIdentity:(LYRIdentity *)identity;
@@ -278,6 +278,13 @@ NS_ASSUME_NONNULL_BEGIN
  @default `YES`.
  */
 @property (nonatomic) BOOL marksMessagesAsRead;
+
+/**
+ @abstract A Boolean value that determines whether or not the username is shown if there is only one other participant in the conversation.
+ @default `NO`.
+ Should be set before `[super viewDidLoad]` is called.
+ */
+@property (nonatomic) BOOL shouldDisplayUsernameForOneOtherParticipant;
 
 /**
  @abstract A Boolean value that determines whether or not an avatar is shown if there is only one other participant in the conversation.

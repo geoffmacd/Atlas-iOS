@@ -32,9 +32,9 @@ static NSString *const ATLPlaceholderText = @"Enter Message";
 
 @implementation ATLMessageComposeTextView
 
-- (id)init
+- (id)initWithFrame:(CGRect)frame
 {
-    self = [super init];
+    self = [super initWithFrame:frame];
     if (self) {
         
         self.attributedText = [[NSAttributedString alloc] initWithString:@"" attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:17],

@@ -63,9 +63,9 @@ static CGFloat const ATLButtonHeight = 28.0f;
     proxy.rightAccessoryButtonFont = [UIFont boldSystemFontOfSize:17];
 }
 
-- (id)init
+- (id)initWithFrame:(CGRect)frame
 {
-    self = [super init];
+    self = [super initWithFrame:frame];
     if (self) {
         self.accessibilityLabel = ATLMessageInputToolbarAccessibilityLabel;
         self.translatesAutoresizingMaskIntoConstraints = NO;

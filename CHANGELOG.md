@@ -1,5 +1,35 @@
 # Atlas Changelog
 
+## 1.1.1
+
+### Public API Changes
+
+* Added the `presenceStatusEnabled` property to the `ATLParticipantPresenting` protocol.
+* Added the `presenceStatusEnabled` property to the `ATLAddressBarViewController`.
+* Added the `shouldShowAvatarItem` and `presenceStatusEnabled` properties to the `ATLParticipantTableViewController`.
+
+### Enhancements
+
+* `ATLParticipantTableViewCell` will now show presence status based on the value of `presenceStatusEnabled` defined in the `ATLParticipantTableViewController`.
+* The address bar's search results will now show presence status based on the value of `presenceStatusEnabled` defined in `ATLAddressBarViewController`.
+
+### Bug Fixes
+
+* Fixes a bug where an empty gap would display instead of the date and time above a message.
+* Fixes a bug where re-creating a previously deleted conversation would cause the more-messages spinner to continously display without actually loading anything. [iOS-3013]
+* Fixes a bug where the queryController pagination window could be set to zero, causing a crash. [iOS-3074]
+
+## 1.1.0
+
+Introducing the presence feature, which allows you to display a user's presence status as a color-coded icon next to their avatar image. [APPS-2740]
+
+### Public API Changes
+
+* Added a new `ATLPresenceStatusView` object, which renders a color-coded circle to represent a user's presence status. Added this to the `ATLAvatarItem`.
+* `ATLAvatarImageView` was renamed to `ATLAvatarView`.
+* Added the `presenceStatusEnabled` property to `ATLAvatarView`, which sets whether the presence status is shown. Default is `YES`.
+* Added a read-only accessor `presenceStatus` to the `ATLAvatarItem`.
+
 ## 1.0.33
 
 ### Public API Changes

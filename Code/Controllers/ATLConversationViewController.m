@@ -19,6 +19,7 @@
 //
 
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <AVFoundation/AVFoundation.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "ATLConversationViewController.h"
@@ -31,8 +32,6 @@
 #import "ATLMediaAttachment.h"
 #import "ATLLocationManager.h"
 #import "LYRIdentity+ATLParticipant.h"
-
-@import AVFoundation;
 
 @interface ATLConversationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, CLLocationManagerDelegate>
 
@@ -259,7 +258,6 @@ static NSInteger const ATLPhotoActionSheet = 1000;
     }
     self.conversationDataSource.queryController.delegate = self;
     self.queryController = self.conversationDataSource.queryController;
-    self.showingMoreMessagesIndicator = [self.conversationDataSource moreMessagesAvailable];
     [self.collectionView reloadData];
 }
 
@@ -491,7 +489,7 @@ static NSInteger const ATLPhotoActionSheet = 1000;
     if ([self shouldDisplaySenderLabelForSection:indexPath.section]) {
         [header updateWithParticipantName:[self participantNameForMessage:message]];
     } else {
-        [header updateWithAttributedStringForDate:[[NSAttributedString alloc] initWithString:@"" attributes:nil]];
+        [header updateWithParticipantName:@""];
     }
 }
 
@@ -952,6 +950,17 @@ static NSInteger const ATLPhotoActionSheet = 1000;
     if (self.collectionView.isDecelerating) return;
     BOOL moreMessagesAvailable = [self.conversationDataSource moreMessagesAvailable];
     if (moreMessagesAvailable == self.showingMoreMessagesIndicator) return;
+    
+    __weak typeof(self) weakSelf = self;
+    __block __weak id observer = [[NSNotificationCenter defaultCenter] addObserverForName:LYRConversationDidFinishSynchronizingNotification object:self.conversation queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        if (observer) {
+            [[NSNotificationCenter defaultCenter] removeObserver:observer];
+        }
+        
+        weakSelf.showingMoreMessagesIndicator = NO;
+        [weakSelf reloadCollectionViewAdjustingForContentHeightChange];
+    }];
+    
     self.showingMoreMessagesIndicator = moreMessagesAvailable;
     [self reloadCollectionViewAdjustingForContentHeightChange];
 }

@@ -35,7 +35,7 @@ static CGFloat const ATLConversationListLoadingMoreConversationsIndicatorViewHei
 static UIView *ATLMakeLoadingMoreConversationsIndicatorView()
 {
     UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0.0, 0.0, ATLConversationListLoadingMoreConversationsIndicatorViewWidth, ATLConversationListLoadingMoreConversationsIndicatorViewHeight)];
-    activityIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    activityIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
     [activityIndicatorView startAnimating];
     return activityIndicatorView;
 }

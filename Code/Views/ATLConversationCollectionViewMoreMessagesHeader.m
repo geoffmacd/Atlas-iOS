@@ -52,7 +52,7 @@ NSString *const ATLMoreMessagesHeaderIdentifier = @"ATLMoreMessagesHeaderIdentif
 {
     _activityIndicatorView = [[UIActivityIndicatorView alloc] init];
     _activityIndicatorView.translatesAutoresizingMaskIntoConstraints = NO;
-    _activityIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    _activityIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
     [_activityIndicatorView startAnimating];
     [self addSubview:_activityIndicatorView];
     

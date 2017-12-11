@@ -42,6 +42,7 @@
 @property (nonatomic) NSSet *updatableProperties;
 @property (nonatomic) NSInteger paginationWindow;
 @property (nonatomic, readonly) NSUInteger totalNumberOfObjects;
+@property (nonatomic, strong) NSOrderedSet *paginatedObjects;
 
 + (instancetype)initWithQuery:(LYRQuery *)query;
 

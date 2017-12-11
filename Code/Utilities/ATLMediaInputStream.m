@@ -811,7 +811,7 @@ static size_t ATLMediaInputStreamPutBytesIntoStreamCallback(void *assetStreamRef
     }
     
     // Copy the consumed data to `buffer`.
-    [self.dataConsumed getBytes:buffer length:bytesToConsume];
+    [self.dataConsumed getBytes:buffer length:MIN(bytesToConsume, self.dataConsumed.length)];
     ATLMediaInputStreamLog(@"input stream: passed data to receiver");
     
     // Clear transfer buffer.
@@ -838,7 +838,7 @@ static size_t ATLMediaInputStreamPutBytesIntoStreamCallback(void *assetStreamRef
 
 #pragma mark - Image I/O Callback Implementation
 
-ALAsset *ATLMediaInputStreamAssetForAssetURL(NSURL *assetURL, ALAssetsLibrary *assetLibrary, NSError **error)
+ALAsset *ATLMediaInputStreamAssetForAssetURL(NSURL *assetURL, ALAssetsLibrary *assetLibrary, NSError * __autoreleasing *error)
 {
     static dispatch_queue_t asyncQueue;
     static dispatch_once_t onceToken;

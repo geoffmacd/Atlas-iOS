@@ -99,5 +99,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable LYRMessage *)messageAtCollectionViewSection:(NSInteger)collectionViewSection;
 
+/**
+ @abstract Returns an `ATLConversationViewController` index path of the given message
+ */
+- (NSIndexPath *)collectionViewIndexPathForMessage:(LYRMessage *)message;
+
+/**
+ @abstract Returns number of messages available for presenting in conversation view.
+ */
+- (NSUInteger)numberOfMessages;
+
+/**
+ @abstract Updates data source with current state of query controller messages.
+ */
+- (void)updateMessages;
+
 @end
 NS_ASSUME_NONNULL_END

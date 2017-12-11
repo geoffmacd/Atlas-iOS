@@ -1,9 +1,9 @@
 //
-//  ATLUIConstants.h
-//  Atlas
+//  UIMutableUserNotificationAction+ATLHelpers.h
+//  Layer-UI-iOS
 //
-//  Created by Kevin Coleman on 6/17/14.
-//  Copyright (c) 2014 Layer, Inc. All rights reserved.
+//  Created by Łukasz Przytuła on 21.11.2017.
+//  Copyright (c) 2017 Layer. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,24 +18,10 @@
 //  limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
-UIColor *ATLBlueColor(void);
+@interface UIMutableUserNotificationAction (ATLHelpers)
 
-UIColor *ATLDarkGrayColor(void);
+- (void)atl_setTextInputBehavior;
 
-UIColor *ATLGrayColor(void);
-
-UIColor *ATLLightGrayColor(void);
-
-UIColor *ATLAddressBarGray(void);
-
-UIColor *ATLRedColor(void);
-
-UIFont *ATLLightFont(CGFloat size);
-
-UIFont *ATLMediumFont(CGFloat size);
-
-UIFont * ATLBoldFont(CGFloat size);
-NS_ASSUME_NONNULL_END
+@end

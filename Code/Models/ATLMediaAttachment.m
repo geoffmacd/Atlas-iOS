@@ -43,7 +43,7 @@ NSData *ATLMediaAttachmentDataFromInputStream(NSInputStream *inputStream);
 /**
  @abstract Generates a thumbnail from the desired video by taking a still
    snapshot from a frame located at the first second in the video.
- @param fileURL File path of the video asset in a form of an `NSURL`
+ @param videoFileURL File path of the video asset in a form of an `NSURL`
  @return Returns a thumbnail image in a form of an `NSUImage`; In case of a
    failure, function returns `nil`.
  */
@@ -51,7 +51,7 @@ UIImage *ATLMediaAttachmentGenerateThumbnailFromVideoFileURL(NSURL *videoFileURL
 
 /**
  @abstract Extracts the video orientation based on assetTtrack's affine transform.
- @param assetTrack The `AVAssetTrack` for which to extract the video orientation from.
+ @param assetVideoTrack The `AVAssetTrack` for which to extract the video orientation from.
  @return Orientation information in a form of `UIImageOrientation`.
  */
 UIImageOrientation ATLMediaAttachmentVideoOrientationForAVAssetTrack(AVAssetTrack *assetVideoTrack);
@@ -132,28 +132,41 @@ static float const ATLMediaAttachmentDefaultThumbnailJPEGCompression = 0.5f;
             return nil;
         }
         NSString *assetType = [asset valueForProperty:ALAssetPropertyType];
+        NSString *assetMIMEType = (__bridge NSString *)(UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)(asset.defaultRepresentation.UTI), kUTTagClassMIMEType));
         
         // --------------------------------------------------------------------
         // Prepare the input stream and MIMEType for the full size media.
         // --------------------------------------------------------------------
-        self.mediaInputStream = [ATLMediaInputStream mediaInputStreamWithAssetURL:asset.defaultRepresentation.url];
-        
-        if ( [assetType isEqualToString:ALAssetTypeVideo]) {
+        if ([assetType isEqualToString:ALAssetTypeVideo]) {
             self.mediaMIMEType = ATLMIMETypeVideoMP4;
-        }else {
-            self.mediaMIMEType = (__bridge NSString *)(UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)(asset.defaultRepresentation.UTI), kUTTagClassMIMEType));
+        } else {
+            self.mediaMIMEType = assetMIMEType;
+        }
+        
+        if ([assetMIMEType isEqualToString:ATLMIMETypeImageHEIC]) {
+            UIImage *jpegImage = [UIImage imageWithCGImage:[asset.defaultRepresentation fullResolutionImage]];
+            self.mediaInputStream = [ATLMediaInputStream mediaInputStreamWithImage:jpegImage metadata:nil];
+            self.mediaMIMEType = ATLMIMETypeImageJPEG;
+        } else {
+            self.mediaInputStream = [ATLMediaInputStream mediaInputStreamWithAssetURL:asset.defaultRepresentation.url];
         }
         
         // --------------------------------------------------------------------
         // Prepare the input stream and MIMEType for the thumbnail.
         // --------------------------------------------------------------------
-        if ([self.mediaMIMEType isEqualToString:ATLMIMETypeImageGIF]) {
+        if ([assetMIMEType isEqualToString:ATLMIMETypeImageGIF]) {
             self.thumbnailInputStream = [ATLMediaInputStream mediaInputStreamWithAssetURL:asset.defaultRepresentation.url];
             ((ATLMediaInputStream *)self.thumbnailInputStream).maximumSize = ATLDefaultGIFThumbnailSize;
             self.thumbnailMIMEType = ATLMIMETypeImageGIFPreview;
-        } else if ([self.mediaMIMEType isEqualToString:ATLMIMETypeVideoMP4]) {
+        } else if ([assetMIMEType isEqualToString:ATLMIMETypeVideoMP4]) {
             UIImage *image = ATLMediaAttachmentGenerateThumbnailFromVideoFileURL(assetURL);
             self.thumbnailInputStream = [ATLMediaInputStream mediaInputStreamWithImage:image metadata:nil];
+            ((ATLMediaInputStream *)self.thumbnailInputStream).maximumSize = thumbnailSize;
+            ((ATLMediaInputStream *)self.thumbnailInputStream).compressionQuality = ATLMediaAttachmentDefaultThumbnailJPEGCompression;
+            self.thumbnailMIMEType = ATLMIMETypeImageJPEGPreview;
+        } else if ([assetMIMEType isEqualToString:ATLMIMETypeImageHEIC]) {
+            UIImage *jpegImage = [UIImage imageWithCGImage:[asset.defaultRepresentation fullResolutionImage]];
+            self.thumbnailInputStream = [ATLMediaInputStream mediaInputStreamWithImage:jpegImage metadata:nil];
             ((ATLMediaInputStream *)self.thumbnailInputStream).maximumSize = thumbnailSize;
             ((ATLMediaInputStream *)self.thumbnailInputStream).compressionQuality = ATLMediaAttachmentDefaultThumbnailJPEGCompression;
             self.thumbnailMIMEType = ATLMIMETypeImageJPEGPreview;

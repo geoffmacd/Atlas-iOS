@@ -49,6 +49,11 @@
     return self;
 }
 
+- (NSOrderedSet *)paginatedObjects
+{
+    return self.objects;
+}
+
 - (NSUInteger)numberOfSections
 {
     return 1;

@@ -171,7 +171,7 @@ NSString *const ATLAvatarViewAccessibilityLabel = @"ATLAvatarViewAccessibilityLa
 
 - (void)setImageViewBackgroundColor:(UIColor *)imageViewBackgroundColor
 {
-    self.backgroundColor = imageViewBackgroundColor;
+    self.imageView.backgroundColor = imageViewBackgroundColor;
     _imageViewBackgroundColor = imageViewBackgroundColor;
 }
 

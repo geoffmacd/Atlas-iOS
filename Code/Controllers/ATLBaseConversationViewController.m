@@ -199,7 +199,9 @@ static CGFloat const ATLMaxScrollDistanceFromBottom = 150;
 - (void)scrollToBottomAnimated:(BOOL)animated
 {
     CGSize contentSize = self.collectionView.contentSize;
-    [self.collectionView setContentOffset:[self bottomOffsetForContentSize:contentSize] animated:animated];
+    CGPoint contentOffset = [self bottomOffsetForContentSize:contentSize];
+    contentOffset.x = self.collectionView.contentOffset.x;
+    [self.collectionView setContentOffset:contentOffset animated:animated];
 }
 
 #pragma mark - Content Inset Management  

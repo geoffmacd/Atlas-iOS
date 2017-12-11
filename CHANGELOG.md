@@ -1,5 +1,26 @@
 # Atlas Changelog
 
+## 1.1.4
+
+### Bug fixes
+
+* Fixes UI of `ATLConversationViewController` for iPhone X
+* Fixes a crash in `ATLConversationViewController` when rapidly sending multiple messages by multiple users.
+* Fixes a crash in `ATLConversationViewController` when changing list of participants and sending or receiving message at the same time.
+
+## 1.1.3
+
+### Bug Fixes
+
+* Fixes an error when installing Atlas via Carthage.
+
+## 1.1.2
+
+### Bug Fixes
+
+* Fixes a crash in `ATLMediaInputStream` when sending an image from the camera roll on iOS 11. [IOS-3225]
+* Fixes an issue where the text input and accessory buttons in the `ATLMessageInputToolbar` would not respond to tap actions on iOS 11.
+
 ## 1.1.1
 
 ### Public API Changes

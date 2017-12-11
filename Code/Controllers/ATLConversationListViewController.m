@@ -252,6 +252,11 @@ NSString *const ATLConversationListViewControllerDeletionModeEveryone = @"Everyo
     _rowHeight = rowHeight;
 }
 
+- (void)updatePredicate:(nullable LYRPredicate *)predicate
+{
+    [self updateQueryControllerWithPredicate:predicate];
+}
+
 #pragma mark - Set Up
 
 - (void)addEditButton

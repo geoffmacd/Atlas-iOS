@@ -91,6 +91,13 @@
 #import "ATLProgressView.h"
 #import "ATLUIImageHelper.h"
 
+///-----------------
+/// @name Categories
+///-----------------
+
+#import "LYRIdentity+ATLParticipant.h"
+#import "UIResponder+ATLFirstResponder.h"
+
 /**
  @abstract Returns the Atlas version as a string.
  */
